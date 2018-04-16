@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CO2 Datensatz</title>
+	<script src="lib/d3.v4.js"></script>
+	<script src="lib/chroma.min.js"></script>
+
+	<style>
+
+	body
+	{
+  		font: 10px sans-serif;
+	}
+
+	.axis path,
+	.axis line 
+	{
+  		fill: none;
+  		stroke: #000;
+  		shape-rendering: crispEdges;
+	}
+
+	.dot 
+	{
+  		stroke: #000;
+	}
+</style>
+
+</head>
+<body>
+
+	<div id="chart"></div>
+
+<script type="text/javascript">
+	
+	window.onload = function ()
+	
+	{ 
+	
+	var margin = {top: 40, left: 300, bottom: 60, right: 100};
+	var width = window.innerWidth * 1 - margin.left - margin.right;
+	var height = window.innerHeight * 4 - margin.top - margin.bottom;
+
+	var x = d3.scaleTime().range([0, width]); // xAxis for time
+    var y = d3.scaleLinear().range([height, 0]); // yAxis for size
+
+	var svg = d3.select('#chart')
+				.append('svg')
+				.attr('height', height + margin.top + margin.bottom)
+ 				.attr('width', width + margin.left + margin.right)
+ 				.append('g')
+ 				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+
+	// Get the data
+		d3.tsv('data/ssp1-baseline-data.csv', function (err, data) {
+				//if (error) console.log(error);
+	// format the data
+		
+		data.forEach(function(d){
+			d.Model = +d.Model;
+			d.Scenario = +d.Scenario;
+			d.Region = +d.Region;
+			d.Variable = +d.Variable;
+			d.Unit = +d.Unit;
+			
+
+
+			console.log(data);
+
+		});
+
+			// wie forme ich die Strings in zahlen um?
+			// wie benutzte ich die Jahre?
+		
+
+		}); // -- end
+	};
+</script>
+</body>
+</html>
