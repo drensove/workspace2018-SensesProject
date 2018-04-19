@@ -11,8 +11,24 @@
 	body
 	{
   		font: 10px sans-serif;
+  		background-color: #ccc;
+  		width: 100%;
 	}
 
+	#chart{
+		background-color:#ccc;
+		width: 1000px;
+		height: 500px;
+		margin: 50px auto;
+		border:solid 1px #000; 
+	}
+
+	svg{
+		background-color: #fff: 
+	}
+
+
+/*
 	.axis path,
 	.axis line 
 	{
@@ -24,7 +40,7 @@
 	.dot 
 	{
   		stroke: #000;
-	}
+	}*/
 </style>
 
 </head>
@@ -33,9 +49,7 @@
 	<div id="chart"></div>
 
 <script type="text/javascript">
-	
 	window.onload = function ()
-	
 	{ 
 	
 	var margin = {top: 40, left: 300, bottom: 60, right: 100};
@@ -52,18 +66,52 @@
  				.append('g')
  				.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
+
+
 	// Get the data
-		d3.tsv('data/ssp1-baseline-data.csv', function (err, data) {
-				//if (error) console.log(error);
-	// format the data
-		
-		data.forEach(function(d){
-			d.Model = +d.Model;
-			d.Scenario = +d.Scenario;
-			d.Region = +d.Region;
-			d.Variable = +d.Variable;
-			d.Unit = +d.Unit;
+		d3.tsv('data/ssp1-baseline-data2.csv'
+			, function (err, data) {
+
+				// // brauche ich das?
+				// var model = d.['Model'];
+				// if (model === ""){
+				// 	model = 'unknown';
+				// }
+				// ////////////////////
+
+				// return {
+				//	... = +d.model;
+				// }
+
+
 			
+	// format the data
+		data.forEach(function(d){
+
+
+			// was macht das, bruache ich das?
+			// d.Model = +d.Model;
+			// d.Scenario = +d.Scenario;
+			// d.Region = +d.Region;
+			// d.Variable = +d.Variable;
+			// d.Unit = +d.Unit;
+			
+			//Worte die vorkommen
+			// Model
+			// Scenario	
+			// Region	
+			// Variable	
+			// Unit	
+			// 2005	2010	2020	2030	2040	2050	2060	2070	2080	2090	2100
+			// IMAGE
+			// SSP1-Baseline
+			// World
+			// Diagnostics|MAGICC6|Concentration|CO2
+			// ppm
+			// Emissions|CO2
+			// Mt CO2/yr
+			// Emissions|CO2|Land Use
+			// Population	million
 
 
 			console.log(data);
@@ -72,6 +120,19 @@
 
 			// wie forme ich die Strings in zahlen um?
 			// wie benutzte ich die Jahre?
+
+
+
+// Swiss Army Knife Code-Model
+ // 	var helper = {};
+	// var values_array = [];
+
+	// data.forEach(function (d) {
+	// 	if (helper[d.dimension] === undefined) {
+	// 		helper[d.dimension] = 1;
+	// 		values_array.push(d.dimension);
+	// 	}
+	// });
 		
 
 		}); // -- end
