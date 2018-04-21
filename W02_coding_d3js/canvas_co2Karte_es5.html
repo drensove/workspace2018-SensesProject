@@ -5,9 +5,40 @@
 	<title>CO2 Datensatz - canvas</title>
 	<script src="lib/d3.v4.js"></script>
 	<script src="lib/chroma.min.js"></script>
+	
+	<style type="text/css">
+		body
+	{
+  		font: 16px sans-serif;
+  		background-color: #384088;
+  		width: 100%;
+	}
+
+	h1,h2{
+		font-family: 'OpenSans';
+		font-size: 20px;
+		text-align: center;
+		color: #fff;
+	}
+
+	#map{
+		background-color:#ccc;
+		margin: 20px auto;
+		
+		width: auto;
+	}
+
+	svg{
+		border:solid 0px #FFF;
+	}
+	</style>
+
 </head>
 <body>
-<span>Year: </span><span id="year"></span>
+	<h1>C02 Map</h1>
+
+	<h2><span>Year: </span><span id="year"></span></h2>
+	<h2><span>Last-Year: </span><span id="last_year"></span></h2>
 <div id="map">
 
 </div>
@@ -24,6 +55,11 @@
 			var pixel = 3;
 			var width = pixel * data.data[current_year].length,
 				height = pixel * data.data[current_year][0].length;
+
+			// new Map
+			// var last_year = data.data.length - 2;
+			// var width = pixel * data.data.[last_year].length,
+			// 	height = pixel * data.data.[last_year][0].length;
 
 
 			var canvas = d3.select('#map')
@@ -53,10 +89,17 @@
 				draw()
 			};
 
+			// new key
+			
 			function draw() {
 
 				d3.select('#year').text(function () {
 					return 1751 + current_year;
+				});
+
+				// new: last year
+				d3.select('#last_year').text(function () {
+					return 1751 + current_year -1;
 				});
 
 				var min = 1e10, max = -1e10;

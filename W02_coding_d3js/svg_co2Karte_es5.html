@@ -11,11 +11,14 @@
 <script type="text/javascript">
 	window.onload = function () {
 		d3.json('data/C02_full_1751-2013.json', function (err, data) {
-			// console.log(data.data.length); // jahre
+			console.log(data.data.length); // jahre
 			// console.log(data.data[0].length); // breite long
 			// console.log(data.data[0][0].length); // höhe lat
 			var min = 1e10, max = -1e10;
 			var current_year = data.data.length - 1;
+
+			var last_year = data.data.length - 2; // Jahr vor aktuellem Jahr.
+
 
 			// for (var year = 0; year < data.data.length; year++) {
 			for (var long = 0; long < data.data[current_year].length; long++) {
@@ -32,7 +35,7 @@
 
 
 			var color = chroma.scale()
-				.range([ "#beab10", "#f69696"])
+				.range([ '#fff','#a1531d','#341405','#000000'])
 				.domain([min, max], 'log');
 				console.log('Hallo');
 			
@@ -80,6 +83,20 @@
 				.style('fill', function (d) {
 					return color(d)
 				});
+
+			// lat.append('circle')
+			// 	.attr('cx', x.bandwidth())
+			// 	.attr('cy', y.bandwidth())
+			// 	.attr('r', 5)
+
+				// wie aus quadraten kreise machen?
+
+				//.attr("width", x.bandwidth())
+				//.attr("height", y.bandwidth())
+				// .style("stroke-width", 0)
+				// .style('fill', function (d) {
+				// 	return color(d)
+				// });
 
 		})
 	}
