@@ -5,28 +5,45 @@
 	<title>CO2 Datensatz - canvas</title>
 	<script src="lib/d3.v4.js"></script>
 	<script src="lib/chroma.min.js"></script>
-	
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,700" rel="stylesheet">
 	<style type="text/css">
 		body
 	{
   		font: 16px sans-serif;
-  		background-color: #384088;
+  		background-color:#4682B4;
   		width: 100%;
+  		font-family: 'Open Sans', sans-serif;
+  		color: #fff;
+  		text-align: left;
+}
+
+	header{
+		float: left;
+		width: 60%;
 	}
 
-	h1,h2{
-		font-family: 'OpenSans';
+	nav{
+	background-color: rgba(255,255,255,0.5);
+	padding: 10px;
+	width: 33%;
+	float: right;
+	}
+
+	h1{
 		font-size: 20px;
-		text-align: center;
-		color: #fff;
+	}
+
+	h2{
+		font-size: 14px;
 	}
 
 	#map{
-		background-color:#ccc;
-		margin: 20px auto;
 		
+		margin: 0px auto;
 		width: auto;
 	}
+
+	/*massstab Tafel fehlt noch*/
 
 	svg{
 		border:solid 0px #FFF;
@@ -35,10 +52,17 @@
 
 </head>
 <body>
-	<h1>C02 Map</h1>
+	<header>
+	<h1>Earth C02 Map: 1750 – 2012</h1>
+	<p><em>press arrow keys.</em></p>
+	</header>
 
-	<h2><span>Year: </span><span id="year"></span></h2>
-	<h2><span>Last-Year: </span><span id="last_year"></span></h2>
+	<nav>
+	<h2><span>Past Year: </span><span id="last_year"></span></h2>
+	<h2><span>Current Year: </span><span id="year"></span></h2>
+	</nav>
+
+	
 <div id="map">
 
 </div>
@@ -51,8 +75,21 @@
 			// console.log(data.data[0].length); // breite long
 			// console.log(data.data[0][0].length); // höhe lat
 
+			//note: 
+				// 1) wie aus allen Rect -> circle formen?
+				// 2) wie zwei Jahre gleichzeitig anzeigen?
+				// 3) das current_year mit dem past_year subtrahieren und das Ergebnis anzeigen. Unterschied zum vergangenen Jahr vergleichen.
+				// 4) wie die Skalen einbauen.
+
+
 			var current_year = data.data.length - 1;
-			var pixel = 3;
+			var pixel = 4;
+
+			// new
+			var x = 100;
+			var y = 100;
+			var r = 5;
+
 			var width = pixel * data.data[current_year].length,
 				height = pixel * data.data[current_year][0].length;
 
@@ -93,13 +130,25 @@
 			
 			function draw() {
 
-				d3.select('#year').text(function () {
-					return 1751 + current_year;
-				});
-
 				// new: last year
 				d3.select('#last_year').text(function () {
 					return 1751 + current_year -1;
+				});
+
+				// for (var long = 0; long < data.data[last_year].length; long++) {
+				// 	for (var lat = 0; lat < data.data[last_year][long].length; lat++) {
+				// 		if (data.data[last_year][long][lat] < min && data.data[last_year][long][lat] !== 0) {
+				// 			min = data.data[last_year][long][lat];
+				// 		}
+				// 		if (data.data[last_year][long][lat] > max) {
+				// 			max = data.data[last_year][long][lat];
+				// 		}
+				// 	}
+				// }
+				//--
+
+				d3.select('#year').text(function () {
+					return 1751 + current_year;
 				});
 
 				var min = 1e10, max = -1e10;
@@ -115,6 +164,8 @@
 					}
 				}
 
+
+
 				console.log('Hallo');
 
 				//var color = chroma.scale().domain([min, max], 'log');
@@ -123,8 +174,43 @@
 				.range(['#ffffe0','#ffd79b','#f2b26a','#db9048','#c0712f','#a1531d','#803912','#5c240c','#341405','#000000'])
 				.domain([min, max], 'log');
 				
-
 				context.clearRect(0, 0, width, height);
+
+
+				//note://////////////////
+
+				// lat.append('circle')
+				// .attr('cx', x.bandwidth())
+				// .attr('cy', y.bandwidth())
+				// .attr('r', 5);
+				/*
+				g.append("circle").attr("cx", function(d, i) {
+		            return i*75 + 50;
+		         })
+		         
+		         .attr("cy", function(d, i) {
+		            return 75;
+		         })
+		  
+		         .attr("r", function(d) {
+		            return d*1.5;
+		         })
+		         
+		         .attr("fill", function(d, i){
+		            return colors[i];
+		         })
+				*/
+
+
+				//new
+				// for (var long = 0; long < data.data[last_year].length; long++) {
+				// 	for (var lat = 0; lat < data.data[last_year][long].length; lat++) {
+				// 		if (data.data[last_year][long][lat] !== 0) {
+				// 			context.fillStyle = color(data.data[last_year][long][lat]);
+				// 			context.fillRect(long * pixel, lat * pixel, pixel, pixel);
+				// 		}
+				// 	}
+				// }
 
 				for (var long = 0; long < data.data[current_year].length; long++) {
 					for (var lat = 0; lat < data.data[current_year][long].length; lat++) {
