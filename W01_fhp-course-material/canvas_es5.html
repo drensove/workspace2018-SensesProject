@@ -16,7 +16,7 @@
 	window.onload = function () {
 		d3.json('data/C02_full_1751-2013.json', function (err, data) {
 
-			// console.log(data.data.length); // jahre
+			 console.log(data.data.length); // jahre
 			// console.log(data.data[0].length); // breite long
 			// console.log(data.data[0][0].length); // höhe lat
 
@@ -77,7 +77,7 @@
 				//var color = chroma.scale().domain([min, max], 'log');
 
 				var color = chroma.scale()
-				.range(['#ffffe0','#ffa474','#db4551','#8b0000'])
+				.range(['#ffffe0','#ffd79b','#f2b26a','#db9048','#c0712f','#a1531d','#803912','#5c240c','#341405','#000000'])
 				.domain([min, max], 'log');
 				
 

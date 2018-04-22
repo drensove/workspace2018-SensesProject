@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CO2 Datensatz - canvas</title>
+	<script src="lib/d3.v4.js"></script>
+	<script src="lib/chroma.min.js"></script>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,700" rel="stylesheet">
+	<style type="text/css">
+		body
+	{
+  		font: 16px sans-serif;
+  		background-color:#4682B4;
+  		width: 100%;
+  		font-family: 'Open Sans', sans-serif;
+  		color: #fff;
+  		text-align: left;
+}
+
+	header{
+		float: left;
+		width: 60%;
+	}
+
+	nav{
+	background-color: rgba(255,255,255,0.5);
+	padding: 10px;
+	width: 33%;
+	float: right;
+	}
+
+	h1{
+		font-size: 20px;
+	}
+
+	h2{
+		font-size: 14px;
+	}
+
+	#map{
+		
+		margin: 0px auto;
+		width: auto;
+	}
+
+	/*massstab Tafel fehlt noch*/
+
+	svg{
+		border:solid 0px #FFF;
+	}
+	</style>
+
+</head>
+<body>
+	<header>
+	<h1>Earth C02 Map: 1750 – 2012</h1>
+	<p><em>press arrow keys.</em></p>
+	</header>
+
+	<nav>
+	<h2><span>Past Year: </span><span id="last_year"></span></h2>
+	<h2><span>Current Year: </span><span id="year"></span></h2>
+	</nav>
+
+	
+<div id="map">
+
+</div>
+
+<script type="text/javascript">
+	window.onload = function () {
+		d3.json('data/C02_full_1751-2013.json', function (err, data) {
+
+			 console.log(data.data.length); // jahre
+			// console.log(data.data[0].length); // breite long
+			// console.log(data.data[0][0].length); // höhe lat
+
+			//note: 
+				// 1) wie aus allen Rect -> circle formen?
+				// 2) wie zwei Jahre gleichzeitig anzeigen?
+				// 3) das current_year mit dem past_year subtrahieren und das Ergebnis anzeigen. Unterschied zum vergangenen Jahr vergleichen.
+				// 4) wie die Skalen einbauen.
+
+
+			var current_year = data.data.length - 1;
+			var pixel = 4;
+
+			// new
+			var x = 100;
+			var y = 100;
+			var r = 5;
+
+			var width = pixel * data.data[current_year].length,
+				height = pixel * data.data[current_year][0].length;
+
+			// new Map
+			// var last_year = data.data.length - 2;
+			// var width = pixel * data.data.[last_year].length,
+			// 	height = pixel * data.data.[last_year][0].length;
+
+
+			var canvas = d3.select('#map')
+				.append('canvas')
+				.attr('width', width)
+				.attr('height', height);
+
+			var context = canvas.node().getContext('2d');
+
+			draw();
+
+			window.onkeyup = function (e) {
+				if (e.keyCode === 39) {// rechts +1 jahr
+					if (current_year === data.data.length - 1) {
+						current_year = 0;
+					} else {
+						current_year++;
+					}
+
+				} else if (e.keyCode === 37) { // left -1 jahr
+					if (current_year === 0) {
+						current_year = data.data.length - 1;
+					} else {
+						current_year--;
+					}
+				}
+				draw()
+			};
+
+			// new key
+			
+			function draw() {
+
+				// new: last year
+				d3.select('#last_year').text(function () {
+					return 1751 + current_year -1;
+				});
+
+				// for (var long = 0; long < data.data[last_year].length; long++) {
+				// 	for (var lat = 0; lat < data.data[last_year][long].length; lat++) {
+				// 		if (data.data[last_year][long][lat] < min && data.data[last_year][long][lat] !== 0) {
+				// 			min = data.data[last_year][long][lat];
+				// 		}
+				// 		if (data.data[last_year][long][lat] > max) {
+				// 			max = data.data[last_year][long][lat];
+				// 		}
+				// 	}
+				// }
+				//--
+
+				d3.select('#year').text(function () {
+					return 1751 + current_year;
+				});
+
+				var min = 1e10, max = -1e10;
+
+				for (var long = 0; long < data.data[current_year].length; long++) {
+					for (var lat = 0; lat < data.data[current_year][long].length; lat++) {
+						if (data.data[current_year][long][lat] < min && data.data[current_year][long][lat] !== 0) {
+							min = data.data[current_year][long][lat];
+						}
+						if (data.data[current_year][long][lat] > max) {
+							max = data.data[current_year][long][lat];
+						}
+					}
+				}
+
+
+
+				console.log('Hallo');
+
+				//var color = chroma.scale().domain([min, max], 'log');
+
+				var color = chroma.scale()
+				.range(['#ffffe0','#ffd79b','#f2b26a','#db9048','#c0712f','#a1531d','#803912','#5c240c','#341405','#000000'])
+				.domain([min, max], 'log');
+				
+				context.clearRect(0, 0, width, height);
+
+
+				//note://////////////////
+
+				// lat.append('circle')
+				// .attr('cx', x.bandwidth())
+				// .attr('cy', y.bandwidth())
+				// .attr('r', 5);
+				/*
+				g.append("circle").attr("cx", function(d, i) {
+		            return i*75 + 50;
+		         })
+		         
+		         .attr("cy", function(d, i) {
+		            return 75;
+		         })
+		  
+		         .attr("r", function(d) {
+		            return d*1.5;
+		         })
+		         
+		         .attr("fill", function(d, i){
+		            return colors[i];
+		         })
+				*/
+
+
+				//new
+				// for (var long = 0; long < data.data[last_year].length; long++) {
+				// 	for (var lat = 0; lat < data.data[last_year][long].length; lat++) {
+				// 		if (data.data[last_year][long][lat] !== 0) {
+				// 			context.fillStyle = color(data.data[last_year][long][lat]);
+				// 			context.fillRect(long * pixel, lat * pixel, pixel, pixel);
+				// 		}
+				// 	}
+				// }
+
+				for (var long = 0; long < data.data[current_year].length; long++) {
+					for (var lat = 0; lat < data.data[current_year][long].length; lat++) {
+						if (data.data[current_year][long][lat] !== 0) {
+							context.fillStyle = color(data.data[current_year][long][lat]);
+							context.fillRect(long * pixel, lat * pixel, pixel, pixel);
+						}
+					}
+				}
+			}
+		})
+	}
+</script>
+</body>
+</html>
